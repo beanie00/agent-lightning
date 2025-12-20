@@ -12,10 +12,19 @@ NAIVE_INSTRUCTION = """
 Please response with only one line with one sentence, following the possible action format shown above. No extra words are allowed.
 """.strip()
 
+TIP_INSTRUCTION = """
+Thanks for your playing.
+Now you have ended a trajectory and collect some meaningless or valuable information from the interactions with the environment.
+Please summary the trajectory, and also summary what information you get from this trajectory, and how far this trajectory is from fully completing the task.
+Please response with only one sentence with only one line, do not include any extra words.
+You sentence should be less than 100 words.
+""".strip()
+
 # Mapping for instruction text types
 INSTRUCTION_MAP = {
     "cot": COT_INSTRUCTION,
     "naive": NAIVE_INSTRUCTION,
+    "tip": TIP_INSTRUCTION,
 }
 
 def _get_instruction(type: str, env_name: str = None):
@@ -57,11 +66,18 @@ def add_chat_instruction(prompt, type: str, sep: str = "\n\n", env_name: str = N
     Returns:
         list: A new prompt list with the instruction appended to the last message.
     """
-    new_prompt = copy.deepcopy(prompt)
-    instruction = _get_instruction(type, env_name)
-    new_prompt[-1].content += sep + instruction
+    if type == "tip":
+        new_prompt = copy.deepcopy(prompt)
+        tip_instruction = _get_instruction(type, env_name)
+        new_prompt.append(UserMessage(source="user", content=tip_instruction))
 
-    return new_prompt
+        return new_prompt
+    else:
+        new_prompt = copy.deepcopy(prompt)
+        instruction = _get_instruction(type, env_name)
+        new_prompt[-1].content += sep + instruction
+
+        return new_prompt
 
 
 def add_single_instruction(prompt, type: str, sep: str = "\n\n", env_name: str = None):
@@ -96,3 +112,23 @@ def add_single_instruction(prompt, type: str, sep: str = "\n\n", env_name: str =
         return new_prompt
     else:
         raise TypeError("Prompt must be a string or a list of strings")
+
+def add_chat_tips(prompt, tips):
+    new_prompt = copy.deepcopy(prompt)
+    new_prompt[-1].content += f"\n\n<tip> {tips}\n</tip>\n\n"
+    return new_prompt
+
+
+def add_chat_all_tips(prompt, tip_list):
+    new_prompt = copy.deepcopy(prompt)
+    tips_iter = iter(tip_list)
+
+    for item in new_prompt:
+        if "User" in item.type:
+            tip = next(tips_iter, None)
+            if tip is None:
+                break
+            if not tip == "":
+                item.content += f"\n\n<tip> {tip}\n</tip>\n\n"
+
+    return new_prompt
