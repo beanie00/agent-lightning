@@ -116,16 +116,17 @@ class TracerTraceToTripletGroup(TracerTraceToTriplet):
 
             request_id = value.get("request_id")
 
-            triplets.append(
-                Triplet(
-                    prompt={"token_ids": get_token_ids(call_span, "prompt_token_ids")},
-                    response={"token_ids": get_token_ids(call_span, "response_token_ids")},
-                    reward=get_reward_0(annotation_span),
-                    metadata=dict(
-                        response_id=request_id,
-                        intrinsic_reward=get_reward_1(annotation_span),
-                        message=get_message(object_span),
-                    ),
+            if len(get_token_ids(call_span, "prompt_token_ids")) > 0:
+                triplets.append(
+                    Triplet(
+                        prompt={"token_ids": get_token_ids(call_span, "prompt_token_ids")},
+                        response={"token_ids": get_token_ids(call_span, "response_token_ids")},
+                        reward=get_reward_0(annotation_span),
+                        metadata=dict(
+                            response_id=request_id,
+                            intrinsic_reward=get_reward_1(annotation_span),
+                            message=get_message(object_span),
+                        ),
+                    )
                 )
-            )
         return triplets

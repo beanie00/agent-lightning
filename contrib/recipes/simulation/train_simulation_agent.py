@@ -51,8 +51,8 @@ def get_config(path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env", type=str, default="scienceworld")
-    parser.add_argument("--algorithm", type=str, default="grpo_qwen_1.5b_instruct")
+    parser.add_argument("--env", type=str, default="scienceworld2")
+    parser.add_argument("--algorithm", type=str, default="empo2_qwen_7b_instruct")
     parser.add_argument("--n_workers", type=int, default=64, help="Number of workers for training")
     parser.add_argument("--trial", type=int, default=0, help="Number of trials")
     parser.add_argument("--task_num", type=int, default=25, help="ScienceWorld Task number to inject as env var")

@@ -40,7 +40,7 @@ from agentlightning.store.base import LightningStore
 
 from .daemon import SimulationAgentModeDaemon
 
-import contrib.agentlightning.contrib.algorithm.simulation_verl.core_empo2
+import contrib.agentlightning.contrib.algorithm.simulation_verl.core_empo2 as core_empo2
 
 __all__ = [
     "SimulationAgentLightningTrainer",

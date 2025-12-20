@@ -7,6 +7,7 @@ import socket
 import threading
 import time
 import uuid
+import copy
 from collections import defaultdict
 from collections.abc import Mapping
 from typing import Any, Dict, List, Literal, Optional, Tuple, cast
@@ -25,7 +26,7 @@ from agentlightning.llm_proxy import LLMProxy, ModelConfig
 from agentlightning.store.base import LightningStore
 from agentlightning.types import EnqueueRolloutRequest, Rollout, RolloutConfig, Task
 
-import contrib.agentlightning.contrib.algorithm.simulation_verl.core_empo2
+import contrib.agentlightning.contrib.algorithm.simulation_verl.core_empo2 as core_empo2
 
 __all__ = [
     "AgentModeDaemon",
