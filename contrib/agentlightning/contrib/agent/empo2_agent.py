@@ -130,7 +130,7 @@ class EMPO2Agent(SimulationAgent):
             
             prompt_builder.init(self.env)
             prompt_builder.update_observation(env_obs)
-            prompt_builder.update_admissible_actions(available_actions_hint)
+            # prompt_builder.update_admissible_actions(available_actions_hint)
 
             prompt = prompt_builder.get_prompt()
 
@@ -190,7 +190,7 @@ class EMPO2Agent(SimulationAgent):
                 prompt_builder.update_step_count()
                 prompt_builder.update_action(executed_action)
                 prompt_builder.update_observation(env_obs)
-                prompt_builder.update_admissible_actions(available_actions_hint)
+                # prompt_builder.update_admissible_actions(available_actions_hint)
 
                 prompt = prompt_builder.get_prompt()
                 
@@ -224,6 +224,7 @@ class EMPO2Agent(SimulationAgent):
                 prompt_builder.max_history = -1
                 prompt = prompt_builder.get_prompt()
                 prompt.pop()
+
                 tip_generation_prompt = self._get_tip_generation_prompt(prompt)
 
                 self.agent._model_client.max_tokens = 128

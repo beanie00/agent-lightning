@@ -9,6 +9,7 @@ Once you've finished your reasoning, you should choose an appropriate action for
 """.strip()
 
 NAIVE_INSTRUCTION = """
+You could try to explore different actions, especially when you are not sure what the best action for your current observation.
 Please response with only one line with one sentence, following the possible action format shown above. No extra words are allowed.
 """.strip()
 
@@ -32,7 +33,7 @@ def _get_instruction(type: str, env_name: str = None):
     Retrieve an instruction string from INSTRUCTION_MAP based on the given type.
 
     Args:
-        type (str): Instruction type key (e.g., "cot", "naive", "critic", "tip").
+        type (str): Instruction type key (e.g., "cot", "naive", "tip").
         env_name (str, optional): Currently unused. Reserved for future
             environment-specific instruction handling.
 
