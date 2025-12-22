@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     # set environment variable before loading configs
     os.environ["TRIAL"] = str(args.trial)
-    if args.env == "scienceworld":
+    if "scienceworld" in args.env:
         os.environ["TASK_NUM"] = str(args.task_num)
 
     # Load configs
