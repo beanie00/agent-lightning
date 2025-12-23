@@ -277,7 +277,6 @@ class SimulationAgentLightningTrainer(RayPPOTrainer):
                     device=gen_batch.batch["fake_ids"].device,
                     use_final_reward_as_step_reward=self.config.algorithm.use_final_reward_as_step_reward,
                     use_intrinsic_reward=self.config.algorithm.use_intrinsic_reward,
-                    is_gigpo=self.config.algorithm.adv_estimator==AdvantageEstimator.GiGPO,
                     empo2_train_mode=getattr(self, "empo2_train_mode", None)
                 )
                 metrics.update(agent_metrics)
