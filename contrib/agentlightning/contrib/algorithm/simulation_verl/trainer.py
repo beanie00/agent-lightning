@@ -272,8 +272,12 @@ class SimulationAgentLightningTrainer(RayPPOTrainer):
                 )
                 self.agent_mode_daemon.run_until_all_finished()
                 batch, agent_metrics = self.agent_mode_daemon.get_train_data_batch(
-                    max_prompt_length=self.config.data.max_prompt_length,
-                    max_response_length=self.config.data.max_response_length,
+                    max_prompt_length=self.config.actor_rollout_ref.rollout.trace_aggregator.max_obs_length \
+                        if self.config.actor_rollout_ref.rollout.trace_aggregator.mode.startswith("trajectory") else \
+                            self.config.data.max_prompt_length,
+                    max_response_length=self.config.actor_rollout_ref.rollout.trace_aggregator.trajectory_max_length \
+                        if self.config.actor_rollout_ref.rollout.trace_aggregator.mode.startswith("trajectory") else \
+                            self.config.data.max_response_length,
                     device=gen_batch.batch["fake_ids"].device,
                     use_final_reward_as_step_reward=self.config.algorithm.use_final_reward_as_step_reward,
                     use_intrinsic_reward=self.config.algorithm.use_intrinsic_reward,
@@ -498,6 +502,8 @@ class SimulationAgentLightningTrainer(RayPPOTrainer):
             store=self.store,
             llm_proxy=self.llm_proxy,
             adapter=self.adapter,
+            trace_aggregator=self.config.actor_rollout_ref.rollout.trace_aggregator,
+            trace_aggregator_log_dir=self.config.actor_rollout_ref.rollout.trace_aggregator.log_dir
         )
         self.agent_mode_daemon.start()
 
