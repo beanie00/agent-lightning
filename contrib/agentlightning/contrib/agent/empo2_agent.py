@@ -164,11 +164,12 @@ class EMPO2Agent(SimulationAgent):
                         intrinsic_reward = 0.1
 
                 try:
-                    if count > 0:
-                        tip_prompt = self._get_tip_prompt(prompt, ret_tips)
-                        instructed_prompt = self._get_instructed_prompt(tip_prompt, sep="")
-                    else:
-                        instructed_prompt = self._get_instructed_prompt(prompt)
+                    # if count > 0:
+                        
+                    # else:
+                    #     instructed_prompt = self._get_instructed_prompt(prompt)
+                    tip_prompt = self._get_all_tip_prompt(prompt, tip_list)
+                    instructed_prompt = self._get_instructed_prompt(tip_prompt, sep="")
 
                     # Main agent step
                     with operation(step_count=step_count):

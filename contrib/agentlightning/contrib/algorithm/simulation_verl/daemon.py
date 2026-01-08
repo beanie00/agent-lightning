@@ -1088,6 +1088,7 @@ class SimulationAgentModeDaemon:
                     off_policy_response_ids = accum_off_policy_response_ids
                     final_reward_list.append(sample_info["final_reward"])
                     step_reward_list.append(trace["step_reward"])
+                    step_intrinsic_reward_list.append(trace["step_intrinsic_reward"])
 
                     # Mark samples with prompts exceeding max_prompt_length to be dropped later
                     if len(prompt_ids) > max_prompt_length:

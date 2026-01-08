@@ -51,34 +51,37 @@ def _get_instruction(type: str, env_name: str = None):
 
 def add_chat_instruction(prompt, type: str, sep: str = "\n\n", env_name: str = None):
     """
-    Append an instruction to the content of the last message in a chat-style prompt.
+    Append an instruction to user messages in a chat-style prompt.
 
     This function does not modify the original prompt. Instead, it returns a
     deep-copied prompt list with the instruction appended.
 
     Args:
         prompt (list): A conversation history represented as a list of objects.
-            Each object must have a `.content` attribute.
+            Each object must have a `.content` attribute and may have `.source`.
         type (str): Instruction type key (e.g., "cot", "naive", "critic", "tip").
         sep (str, optional): Separator inserted between the existing content
             and the instruction.
         env_name (str, optional): Currently unused. Reserved for future use.
 
     Returns:
-        list: A new prompt list with the instruction appended to the last message.
+        list: A new prompt list with the instruction appended.
     """
+    new_prompt = copy.deepcopy(prompt)
+    instruction = _get_instruction(type, env_name)
+
     if type == "tip":
-        new_prompt = copy.deepcopy(prompt)
-        tip_instruction = _get_instruction(type, env_name)
-        new_prompt.append(UserMessage(source="user", content=tip_instruction))
-
+        new_prompt.append(
+            UserMessage(source="user", content=instruction)
+        )
         return new_prompt
-    else:
-        new_prompt = copy.deepcopy(prompt)
-        instruction = _get_instruction(type, env_name)
-        new_prompt[-1].content += sep + instruction
 
-        return new_prompt
+    # else: Add the instruction to all UserMessage instances with source="user".
+    for msg in new_prompt:
+        if getattr(msg, "source", None) == "user":
+            msg.content += sep + instruction
+
+    return new_prompt
 
 
 def add_single_instruction(prompt, type: str, sep: str = "\n\n", env_name: str = None):
@@ -118,7 +121,6 @@ def add_chat_tips(prompt, tips):
     new_prompt = copy.deepcopy(prompt)
     new_prompt[-1].content += f"\n\n<tip> {tips}\n</tip>\n\n"
     return new_prompt
-
 
 def add_chat_all_tips(prompt, tip_list):
     new_prompt = copy.deepcopy(prompt)

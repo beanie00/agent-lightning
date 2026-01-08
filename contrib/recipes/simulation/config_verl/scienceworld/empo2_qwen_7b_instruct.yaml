@@ -11,7 +11,7 @@ variables:
   PROJECT_NAME: EMPO2-ScienceWorld
   TASK_NUM: ${oc.env:TASK_NUM,25}
   TRIAL: ${oc.env:TRIAL,0}
-  EXPERIMENT_NAME: empo2-${variables.TASK_NUM}-sciworld-${variables.TRIAL}-traj-agg
+  EXPERIMENT_NAME: empo2-${variables.TASK_NUM}-sciworld-${variables.TRIAL}-traj-agg-strict-2
   DATA_DIR: agl_envs/simulation/task_data/scienceworld/single_data/${variables.TASK_NUM}
   OUTPUT_DIR: /mnt/jeonghyekim/empo2_checkpoint/1223/${variables.EXPERIMENT_NAME}
 
@@ -53,7 +53,7 @@ actor_rollout_ref:
       temperature: 0.4
       do_sample: true
     trace_aggregator:
-      mode: trajectory-tolerant
+      mode: trajectory-strict
       special_token_tolerance: 0
       string_tolerance: 0
       max_obs_length: 16384
