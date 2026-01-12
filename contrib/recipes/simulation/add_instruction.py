@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft. All rights reserved.
+
 import copy
 
 from autogen_core.models import UserMessage
