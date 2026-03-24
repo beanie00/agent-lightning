@@ -320,7 +320,16 @@ class EnvAgentLightningTrainer(RayPPOTrainer):
 
             # recompute old_log_probs
             with _timer("old_log_prob", timing_raw):
-                old_log_prob = self.actor_rollout_wg.compute_log_prob(batch)
+                if hasattr(self.config, 'tips') and self.config.tips.use_tips and self.empo2_train_mode == "off-policy":
+                    old_batch = deepcopy(batch)
+                    old_batch.batch['input_ids'] = old_batch.batch['old_input_ids']
+                    old_batch.batch['attention_mask'] = old_batch.batch['old_attention_mask']
+                    old_batch.batch['position_ids'] = old_batch.batch['old_position_ids']
+                    old_log_prob = self.actor_rollout_wg.compute_log_prob(old_batch)
+                    batch.batch["old_log_probs"] = old_log_prob.batch["old_log_probs"]
+                else:
+                    old_log_prob = self.actor_rollout_wg.compute_log_prob(batch)
+                # old_log_prob = self.actor_rollout_wg.compute_log_prob(batch)
                 entropys = old_log_prob.batch["entropys"]
                 response_masks = batch.batch["response_mask"]
                 loss_agg_mode = self.config.actor_rollout_ref.actor.loss_agg_mode
@@ -380,8 +389,8 @@ class EnvAgentLightningTrainer(RayPPOTrainer):
                     config=self.config.algorithm,
                 )
 
-                if hasattr(self.config, "tips") and self.config.tips.use_tips:
-                    batch = core_empo2.low_prob_token_masking(batch)
+                # if hasattr(self.config, "tips") and self.config.tips.use_tips:
+                #     batch = core_empo2.low_prob_token_masking(batch)
 
             # Calculate the metrics before processing. Refer to the comments of function `compute_data_metrics` for details.
             metrics.update(compute_data_metrics(batch=batch, use_critic=self.use_critic, suffix="_before_processing"))
